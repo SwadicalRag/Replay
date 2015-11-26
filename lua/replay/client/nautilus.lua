@@ -19,7 +19,11 @@ end
 
 function Replay:setSpeed(speed)
     self.replaySpeed = math.abs(speed)
-    self:setDirection(speed)
+end
+
+function Replay:setVelocity(velocity)
+    self:setSpeed(velocity)
+    self:setDirection(velocity)
 end
 
 function Replay:getVelocity()
