@@ -1,7 +1,7 @@
 Replay = {}
 
 Replay.DEBUG = true
-Replay.VERSION = "0.1.0"
+Replay.VERSION = "0.1.1"
 Replay.startTime = SysTime()
 
 function Replay:log(msg)
