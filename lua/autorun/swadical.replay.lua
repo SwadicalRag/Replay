@@ -1,6 +1,7 @@
 Replay = {}
 
 Replay.DEBUG = true
+Replay.VERSION = "0.1.0"
 Replay.startTime = SysTime()
 
 function Replay:log(msg)
@@ -21,3 +22,5 @@ Replay:log("Initialising...")
 include("replay/shared/recorder.lua")
 
 include("replay/"..((SERVER and "server") or "client").."/init.lua")
+
+Replay:log("Replay "..Replay.VERSION.." has successfully initialised.")
