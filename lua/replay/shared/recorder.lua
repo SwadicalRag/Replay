@@ -83,7 +83,7 @@ function Replay:newRecorder()
     end
 
     function recorder:getFrameSigned(n)
-        return self.data[math.min(math.max(self.activeFrame + sign/math.abs(n),1),#self.data)]
+        return self.data[math.min(math.max(self.activeFrame + n/math.abs(n),1),#self.data)]
     end
 
     function recorder:interpolateFrame(frame,sec)
