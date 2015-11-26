@@ -12,12 +12,12 @@ function Replay:newRecorder()
 
     function recorder:attach(ply)
         Replay:logDebug("A recorder object was attached to "..tostring(ply)..".")
-        self.target = ply
+        self.ply = ply
     end
 
     --Internal: do not call.
     function recorder:checkAttached()
-        assert(IsValid(self.target),"This recorder class is unattached!")
+        assert(IsValid(self.ply),"This recorder class is unattached!")
     end
 
     --Internal: do not call.
