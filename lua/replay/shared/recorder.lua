@@ -67,8 +67,8 @@ function Replay:newRecorder()
         Replay:logDebug("A recorder object no longer being manipulated.")
     end
 
-    function recorder:jumpToAbsoluteFrame(framesBackward)
-        self.activeFrame = math.min(math.max(#self.data-framesBackward,1),#self.data)
+    function recorder:jumpToAbsoluteFrame(frameID)
+        self.activeFrame = math.min(math.max(frameID,1),#self.data)
         return self.data[self.activeFrame]
     end
 
@@ -93,14 +93,18 @@ function Replay:newRecorder()
     function recorder:getFrameFromCommandNumber(cmdnum)
         local minDiff = math.huge
         local closestFrame = false
+        local closestFrameID = false
 
-        for _,frame in ipairs(self.data) do
+        for frameID,frame in ipairs(self.data) do
             local diff = math.abs(cmdnum-frame.cmdnum)
             minDiff = math.min(minDiff,diff)
-            if diff == minDiff then closestFrame = frame end
+            if diff == minDiff then
+                closestFrame = frame
+                closestFrameID = frameID
+            end
         end
 
-        return closestFrame
+        return closestFrame,closestFrameID
     end
 
     function recorder:interpolateFrame(frame,sec)
