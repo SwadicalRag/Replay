@@ -18,8 +18,12 @@ function Replay:getSpeed()
 end
 
 function Replay:setSpeed(speed)
-    self.replayDirection = math.abs(speed)
+    self.replaySpeed = math.abs(speed)
     self:setDirection(speed)
+end
+
+function Replay:getVelocity()
+    return self:getDirection() * self:getSpeed()
 end
 
 function Replay:startManipulating()
@@ -34,20 +38,19 @@ end
 
 function Replay:currentFrame()
     if(self:mStatus()) then
-        local elapsed = SysTime() - self.recorderObject.startedManipulatingAt
-        return self.recorderObject:interpolateFrame(self.recorderObject:getCurrentFrame(),self:getDirection() * elapsed)
+        local elapsed = SysTime() - self.lastFrameUpdate
+        return self.recorderObject:interpolateFrame(self:getDirection() * self:getSpeed() * elapsed)
+        --return self.recorderObject:getCurrentFrame()
     else
         return false
     end
 end
 
-timer.Create("Replay_Nautilus_Update",0,0,function()
-    if not Replay.recorderObject then return end
+hook.Add("PlayerTick","Replay_Nautilus_Update",function()
     if(Replay:mStatus()) then
-        if(Replay:getDirection() > 0) then
-            Replay.recorderObject:jumpForward()
-        else
-            Replay.recorderObject:jumpBackward()
+        Replay.recorderObject:jump(Replay:getVelocity())
+        if(Replay.recorderObject.activeFrame%0) then
+            Replay.lastFrameUpdate = SysTime()
         end
     end
 end)

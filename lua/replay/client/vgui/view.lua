@@ -1,4 +1,4 @@
-hook.Add("CalcView","ReplaySmoothView",function(ply,_,__,fov,___,____)
+hook.Add("CalcView","ReplaySmoothView",function(ply,pos,__,fov,___,____)
     if(Replay:mStatus()) then
         local frame = Replay:currentFrame()
         return {
@@ -6,5 +6,12 @@ hook.Add("CalcView","ReplaySmoothView",function(ply,_,__,fov,___,____)
             angles = frame.eyeAngles,
             fov = fov
         }
+    end
+end)
+
+hook.Add("CalcViewModelView","ReplaySmoothView",function()
+    if(Replay:mStatus()) then
+        local frame = Replay:currentFrame()
+        return frame.eyePos,frame.eyeAngles
     end
 end)

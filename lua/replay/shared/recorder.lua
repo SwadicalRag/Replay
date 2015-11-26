@@ -47,7 +47,7 @@ function Replay:newRecorder()
             cmdnum = self.ply:GetCurrentCommand():CommandNumber()
         }
 
-        if CLIENT then self.data[#self.data].eyePos = EyePos() end
+        if CLIENT then self.data[#self.data].eyePos = self.ply:EyePos() end
 
         if(#self.data > self.maxData) then
             table.remove(self.data,1)
@@ -55,14 +55,18 @@ function Replay:newRecorder()
         recorder.activeFrame = #self.data
     end
 
+    function recorder:getActiveFrame()
+        return math.floor(self.activeFrame + 0.5)
+    end
+
     function recorder:startManipulating()
-        self.startedManipulatingAt = CurTime()
+        self.startedManipulatingAt = SysTime()
         self:setManipulating(true)
         Replay:logDebug("A recorder object is now being manipulated.")
     end
 
     function recorder:stopManipulating()
-        for i=self.activeFrame+1,#self.data do
+        for i=self:getActiveFrame()+1,#self.data do
             self.data[i] = nil
         end
         self:setManipulating(false)
@@ -76,20 +80,22 @@ function Replay:newRecorder()
 
     function recorder:jumpBackward(n)
         self.activeFrame = math.min(math.max(self.activeFrame - (n or 1),1),#self.data)
-        return self.data[self.activeFrame]
+        return self.data[self:getActiveFrame()]
     end
 
     function recorder:jumpForward(n)
         self.activeFrame = math.min(math.max(self.activeFrame + (n or 1),1),#self.data)
-        return self.data[self.activeFrame]
+        return self.data[self:getActiveFrame()]
     end
 
+    recorder.jump = recorder.jumpForward
+
     function recorder:getCurrentFrame()
-        return self.data[self.activeFrame]
+        return self.data[self:getActiveFrame()]
     end
 
     function recorder:getFrameSigned(n)
-        return self.data[math.min(math.max(self.activeFrame + n/math.abs(n),1),#self.data)]
+        return self.data[math.min(math.max(self:getActiveFrame() + n/math.abs(n),1),#self.data)]
     end
 
     function recorder:getFrameFromCommandNumber(cmdnum)
@@ -109,8 +115,9 @@ function Replay:newRecorder()
         return closestFrame,closestFrameID
     end
 
-    function recorder:interpolateFrame(frame,sec)
+    function recorder:interpolateFrame(sec)
         local frac = math.abs(sec/self.frameInterval)
+        local frame = self:getCurrentFrame()
         local frameNext = self:getFrameSigned(sec)
         local data = {
             position = lerpGeneric(frac,frame.position,frameNext.position),

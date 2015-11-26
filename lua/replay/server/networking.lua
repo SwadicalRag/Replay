@@ -10,6 +10,14 @@ net.Receive("replay_setManipulating",function(len,ply)
             if targetFrame then
                 ply.recorderObject:jumpToAbsoluteFrame(frameID)
                 ply.recorderObject:stopManipulating()
+
+                local frame = ply.recorderObject:getCurrentFrame()
+
+                ply:SetPos(frame.position)
+                ply:SetEyeAngles(frame.eyeAngles)
+                ply:SetVelocity(frame.velocity)
+                --ply:SetHealth(frame.health)
+                --ply:SetArmor(frame.armor)
             else
                 Replay:logError("Unreasonable replay request from "..ply:Nick())-- should never happen
             end
