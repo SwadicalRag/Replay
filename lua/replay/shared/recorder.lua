@@ -47,6 +47,8 @@ function Replay:newRecorder()
             cmdnum = self.ply:GetCurrentCommand():CommandNumber()
         }
 
+        if CLIENT then self.data[#self.data].eyePos = EyePos() end
+
         if(#self.data > self.maxData) then
             table.remove(self.data,1)
         end
@@ -110,7 +112,7 @@ function Replay:newRecorder()
     function recorder:interpolateFrame(frame,sec)
         local frac = math.abs(sec/self.frameInterval)
         local frameNext = self:getFrameSigned(sec)
-        return {
+        local data = {
             position = lerpGeneric(frac,frame.position,frameNext.position),
             velocity = lerpGeneric(frac,frame.velocity,frameNext.velocity),
             eyeAngles = lerpGeneric(frac,frame.eyeAngles,frameNext.eyeAngles),
@@ -119,6 +121,12 @@ function Replay:newRecorder()
             time = lerpGeneric(frac,frame.time,frameNext.time),
             cmdnum = lerpGeneric(frac,frame.cmdnum,frameNext.cmdnum)
         }
+
+        if CLIENT then
+            data.eyePos = lerpGeneric(frac,frame.eyePos,frameNext.eyePos)
+        end
+
+        return data
     end
 
     return recorder
