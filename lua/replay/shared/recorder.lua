@@ -2,6 +2,10 @@ Replay:logDebug("Loading shared recorder library...")
 
 -- HACK: this library assumes recorder:captureFrame is called each TICK (every engine.TickInterval() seconds)
 
+local function lerpGeneric(frac,from,to)
+    return from + (to-from) * frac
+end
+
 function Replay:newRecorder()
     local recorder = {}
     recorder.data = {}
@@ -90,13 +94,13 @@ function Replay:newRecorder()
         local frac = math.abs(sec/self.frameInterval)
         local frameNext = self:getFrameSigned(sec)
         return {
-            position = LerpVector(frac,frame.position,frameNext.position),
-            velocity = LerpVector(frac,frame.velocity,frameNext.velocity),
-            eyeAngles = LerpAngle(frac,frame.eyeAngles,frameNext.eyeAngles),
-            health = Lerp(frac,frame.health,frameNext.health),
-            armor = Lerp(frac,frame.armor,frameNext.armor),
-            time = Lerp(frac,frame.time,frameNext.time),
-            cmdnum = Lerp(frac,frame.cmdnum,frameNext.cmdnum)
+            position = lerpGeneric(frac,frame.position,frameNext.position),
+            velocity = lerpGeneric(frac,frame.velocity,frameNext.velocity),
+            eyeAngles = lerpGeneric(frac,frame.eyeAngles,frameNext.eyeAngles),
+            health = lerpGeneric(frac,frame.health,frameNext.health),
+            armor = lerpGeneric(frac,frame.armor,frameNext.armor),
+            time = lerpGeneric(frac,frame.time,frameNext.time),
+            cmdnum = lerpGeneric(frac,frame.cmdnum,frameNext.cmdnum)
         }
     end
 
