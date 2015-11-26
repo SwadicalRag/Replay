@@ -90,6 +90,19 @@ function Replay:newRecorder()
         return self.data[math.min(math.max(self.activeFrame + n/math.abs(n),1),#self.data)]
     end
 
+    function recorder:getFrameFromCommandNumber(cmdnum)
+        local minDiff = math.huge
+        local closestFrame = false
+
+        for _,frame in ipairs(self.data) do
+            local diff = math.abs(cmdnum-frame.cmdnum)
+            minDiff = math.min(minDiff,diff)
+            if diff == minDiff then closestFrame = frame end
+        end
+
+        return closestFrame
+    end
+
     function recorder:interpolateFrame(frame,sec)
         local frac = math.abs(sec/self.frameInterval)
         local frameNext = self:getFrameSigned(sec)
