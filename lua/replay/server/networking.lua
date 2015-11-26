@@ -1,12 +1,15 @@
 util.AddNetworkString("replay_setManipulating")
+util.AddNetworkString("replay_setVelocity")
 
 net.Receive("replay_setManipulating",function(len,ply)
     local status = net.ReadBool()
     if ply.recorderObject then
         if status then
+            ply:Lock()
             ply.recorderObject:startManipulating()-- and stop recording
         else
             local targetFrame,frameID = ply.recorderObject:getFrameFromCommandNumber(net.ReadInt(24))
+            ply:UnLock()
             if targetFrame then
                 ply.recorderObject:jumpToAbsoluteFrame(frameID)
                 ply.recorderObject:stopManipulating()
@@ -23,4 +26,8 @@ net.Receive("replay_setManipulating",function(len,ply)
             end
         end
     end
+end)
+
+net.Receive("replay_setVelocity",function(len,ply)
+    ply.replay_velocity = net.ReadInt(8)
 end)

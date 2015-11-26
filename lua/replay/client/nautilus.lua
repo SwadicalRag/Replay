@@ -11,6 +11,7 @@ end
 
 function Replay:setDirection(sign)
     self.replayDirection = sign/math.abs(sign)
+    self:announceReplayVelocity(self:getVelocity())
 end
 
 function Replay:getSpeed()
@@ -19,6 +20,7 @@ end
 
 function Replay:setSpeed(speed)
     self.replaySpeed = math.abs(speed)
+    self:announceReplayVelocity(self:getVelocity())
 end
 
 function Replay:setVelocity(velocity)
