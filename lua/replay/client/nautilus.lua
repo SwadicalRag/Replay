@@ -42,6 +42,7 @@ function Replay:currentFrame()
 end
 
 timer.Create("Replay_Nautilus_Update",0,0,function()
+    if not Replay.recorderObject then return end
     if(Replay:mStatus()) then
         if(Replay:getDirection() > 0) then
             Replay.recorderObject:jumpForward()
