@@ -1,6 +1,6 @@
 Replay = {}
 
-Replay.DEBUG = true
+Replay.DEBUG = false
 Replay.VERSION = "0.1.1"
 Replay.startTime = SysTime()
 
